@@ -5,8 +5,28 @@
   //--------------- put your code below this line -------------
 
   // input field for the calculator screen
-  var output = document.getElementById('output');
+  let q = [], o = d.getElementById('output');
 
-  // calculator button
-  var bttn1 = document.querySelector('[name="bttn1"]');
+  document.addEventListener('click', ({ target: { classList, value } }) => {
+    if (classList.contains('bttn')) {
+        switch (value) {
+            case 'C':
+                o.value = '';
+                q = [];
+                break;
+            case '=':
+                const t = eval(q.join(''));
+                q.push('=', t);
+
+                o.value = q.join('');
+                q = [];
+                break;
+            case 'x':
+                value = '*';
+            default:
+                q.push(value);
+                o.value = q.join('');
+        }
+    }
+  });
 })();
