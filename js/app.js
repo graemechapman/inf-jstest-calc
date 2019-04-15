@@ -1,32 +1,40 @@
 // self executing main function
-(function() {
+(function(d) {
   console.log('Welcome to the calculator app');
 
   //--------------- put your code below this line -------------
 
   // input field for the calculator screen
-  let q = [], o = d.getElementById('output');
+  let q = '', o = d.getElementById('output');
 
-  document.addEventListener('click', ({ target: { classList, value } }) => {
-    if (classList.contains('bttn')) {
+  d.addEventListener('click', ({ target: { value } }) => {
+    if (value) {
         switch (value) {
             case 'C':
-                o.value = '';
-                q = [];
-                break;
+                q = '';
             case '=':
-                const t = eval(q.join(''));
-                q.push('=', t);
+                let i, t = q.split(/([\+x-])/);
 
-                o.value = q.join('');
-                q = [];
+                [
+                    ['x', (a, b) => a * b],
+                    ['+', (a, b) => a + b],
+                    ['-', (a, b) => a - b]
+                ].forEach(
+                    ([k, fn]) => {
+                        while ((i = t.indexOf(k)) > -1) {
+                            t.splice(i-1, 3, fn(parseInt(t[i-1]), parseInt(t[i+1])));
+                        }
+                    }
+                );
+
+                o.value = t[0];
+
+                q = '';
                 break;
-            case 'x':
-                value = '*';
             default:
-                q.push(value);
-                o.value = q.join('');
+                q += value;
+                o.value = q;
         }
     }
   });
-})();
+})(document);
